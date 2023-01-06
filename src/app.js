@@ -32,14 +32,29 @@ server.get("/tweets", (req, res) => {
 
 server.post("/sign-up", (req, res) => {
   const user = req.body;
-  console.log("user", user);
 
-  usersData.push(user);
-  res.status(201).send("OK");
+  if (!user) {
+    res.status(400).send("preencha todos os campos");
+  } else {
+    console.log("user", user);
+    usersData.push(user);
+    res.status(201).send("OK");
+  }
 });
 
 server.post("/tweets", (req, res) => {
   const tweet = req.body;
+
+  if (!usersData.find((user) => user.username === tweet.username)) {
+    res.status(401).send("UNAUTHORIZED");
+    return;
+  }
+
+  if (!tweet.tweet) {
+    alert("escreva um tweet");
+    return res.status(401).send("escreva um tweet");
+  }
+
   tweetsData.push(tweet);
 
   res.status(201).send("OK");
